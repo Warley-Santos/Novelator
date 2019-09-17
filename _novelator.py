@@ -2,16 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 from ebooklib import epub
 
-import chapter, links, string_utils
+import chapters_utils, links, string_utils
 
 def generate_ebook():
 
-    asdf=""
-    url = links.btth
+    novel_link = links.btth
     chapter_contents = ""
     
     chapter_title = []
-    chapter_list = []
+    book_chapters = []
 
     book = epub.EpubBook()
 
@@ -22,23 +21,26 @@ def generate_ebook():
 
     book.add_author('Heavenly Silkworm Potato')
 
-    for i in range(0, 3):
-        print("Getting: " + url+str(i+1))
+    chapter_list = chapters_utils.get_chapters_list("https://www.wuxiaworld.com" + novel_link)
 
-        response = requests.get(url+str(i+1))
+    for i, c in enumerate(chapter_list):
+    # for i in range(0, 3):
+        print("Getting: " + "https://www.wuxiaworld.com" + c.link)
+
+        response = requests.get("https://www.wuxiaworld.com" + c.link)
         soup = BeautifulSoup(response.text,"html.parser")
 
-        chapter_title.append(chapter.get_chapter_title(soup))
+        chapter_title.append(chapters_utils.get_chapter_title(soup))
 
-        chapter_contents = chapter.get_chapter_contents(soup)
+        chapter_contents = chapters_utils.get_chapter_contents(soup)
         chapter_contents = string_utils.replace_odd_chars(chapter_contents)
 
-        chapter_list.append(epub.EpubHtml(title=chapter_title[i].text, file_name=chapter_title[i].text + '.xhtml', lang='en'))
+        book_chapters.append(epub.EpubHtml(title=chapter_title[i].text, file_name=chapter_title[i].text + '.xhtml', lang='en'))
 
-        chapter_list[i].content = chapter_contents
+        book_chapters[i].content = chapter_contents
         chapter_contents = ""
 
-        book.add_item(chapter_list[i])
+        book.add_item(book_chapters[i])
 
     # define CSS style
     style = 'BODY {color: white;}'
@@ -53,8 +55,8 @@ def generate_ebook():
     # basic spine
     book.spine = ['nav']
 
-    for i in range(0, len(chapter_list)):
-        book.spine.append(chapter_list[i])
+    for i in range(0, len(book_chapters)):
+        book.spine.append(book_chapters[i])
 
     book.add_item(epub.EpubNcx())
     book.add_item(epub.EpubNav())
