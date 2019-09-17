@@ -1,0 +1,1 @@
+btth = "https://www.wuxiaworld.com/novel/battle-through-the-heavens/btth-chapter-"
