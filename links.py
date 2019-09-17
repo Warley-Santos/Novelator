@@ -1,1 +1,1 @@
-btth = "https://www.wuxiaworld.com/novel/battle-through-the-heavens/btth-chapter-"
+btth = "/novel/battle-through-the-heavens/"
