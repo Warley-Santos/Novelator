@@ -4,7 +4,7 @@ from chapter import Chapter
 import requests
 
 def get_chapter_title(soup):
-       return soup.findAll('div',{'class':'caption clearfix'})[0].findAll('h4',{'class':''})[0]
+    return soup.findAll('div',{'class':'caption clearfix'})[0].findAll('h4',{'class':''})[0]
     
 def get_chapter_contents(soup):
     chapter_contents = ""

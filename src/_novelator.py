@@ -2,11 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 from ebooklib import epub
 
-import chapters_utils, links, string_utils
+import book_utils
+import chapters_utils
+import links
+import string_utils
 
 def generate_ebook():
 
-    novel_link = links.btth
+    novel_link = links.svnk
     chapter_contents = ""
     
     chapter_title = []
@@ -42,25 +45,14 @@ def generate_ebook():
         book.add_item(book_chapters[i])
 
     # define CSS style
-    style = 'BODY {color: white;}'
-    nav_css = epub.EpubItem(uid="style_nav", file_name="style/nav.css", media_type="text/css", content=style)
+    book = book_utils.add_css(book)
 
-    # add CSS file
-    book.add_item(nav_css)
-
-    for i in range(0, len(chapter_title)):
-        book.toc.append((epub.Link(chapter_title[i].text + '.xhtml', chapter_title[i].text, "chapter" + str(i+1) )))
-
-    # basic spine
-    book.spine = ['nav']
-
-    for i in range(0, len(book_chapters)):
-        book.spine.append(book_chapters[i])
-
-    book.add_item(epub.EpubNcx())
-    book.add_item(epub.EpubNav())
+    book = book_utils.generate_sumary(chapter_title, book)
+    book = book_utils.add_spine(book)
+    book = book_utils.append_chapters(book_chapters, book)
+    book = book_utils.add_nav_ncx(book)
 
     # save in books folder
-    epub.write_epub('books/btth.epub', book, {})
+    epub.write_epub('books/teste.epub', book, {})
 
 generate_ebook()
