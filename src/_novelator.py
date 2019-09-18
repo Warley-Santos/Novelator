@@ -24,8 +24,7 @@ def generate_ebook():
     chapter_list = chapters_utils.get_chapters_list("https://www.wuxiaworld.com" + novel_link)
 
     for i, c in enumerate(chapter_list):
-    # for i in range(0, 3):
-        print("Getting: " + "https://www.wuxiaworld.com" + c.link)
+        print("Getting: " + "https://www.wuxiaworld.com" + c.link) 
 
         response = requests.get("https://www.wuxiaworld.com" + c.link)
         soup = BeautifulSoup(response.text,"html.parser")
